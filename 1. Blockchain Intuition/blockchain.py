@@ -62,3 +62,37 @@ class Blockchain:
     return True
 
 # Part 2 - Mining our Blockchains
+
+# Creating a Web App
+
+app = Flask(__name__)
+
+# Creating a Blockchain
+blockchain = Blockchain()
+
+# Mining a new block
+'''
+1. 이전 블럭 가져오기
+2. 이전 블럭의 작업 증명 가져오기 (Nonce 계산은 현 작업 증명 ** 2 - 이전 작업 증명 ** 2 하여 계산하므로 이전 블럭의 작업 증명이 필요함)
+3. 이전 블럭의 작업 증명을 통해 현 블럭 작업 증명하기(골든 논스 찾기)
+4. 이전 블럭을 해시화하기
+5. 이전 블럭 해시와 현재의 작업 증명 + a로 블럭 만들기
+'''
+@app.route('/mine_block', methods = ['GET'])
+def mine_block():
+    # 이전 블럭이 있어야 작업 증명을 위한 연산이 가능
+    previous_block = blockchain.get_previous_block()
+
+    # 이전 블럭의 작업 증명
+    previous_proof = previous_block['proof']
+
+    # 작업 증명 획득하기
+    proof = blockchain.proof_of_work(previous_proof)
+    previous_hash = blockchain.hash(previous_block)
+    block = blockchain.create_block(proof, previous_hash)
+    response = { 'message': 'Congratulation, you just mined a block!',
+                 'index': block['index'],
+                 'timestamp': block['timestamp'],
+                 'proof': block['proof'],
+                 'previous_hash': block['previous_hash'] }
+    return jsonify(response), 200
