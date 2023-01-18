@@ -40,4 +40,25 @@ class Blockchain:
         new_proof += 1
     return new_proof
 
+  def hash(self, block):
+    # hashlib 라이브러리의 sha256 메서드가 암호화할 수 있도록 문자열로 변환
+    encoded_block = json.dumps(block, sort_keys = True).encode
+    return hashlib.sha256(encoded_block).hexdigest()
+  
+  def is_chain_valid(self, chain):
+    previous_block = chain[0]
+    block_index = 1
+    while block_index < len(chain):
+      block = chain[block_index]
+      if previous_block['previous_hash'] != self.hash(block):
+        return False
+      previous_proof = previous_block['proof']
+      proof = block['proof']
+      hash_operation = hashlib.sha256(str(proof ** 2 - previous_proof ** 2).encode()).hexdigest()
+      if hash_operation[:4] != '0000':
+        return False
+      previous_block = block
+      block_index += 1
+    return True
+
 # Part 2 - Mining our Blockchains
