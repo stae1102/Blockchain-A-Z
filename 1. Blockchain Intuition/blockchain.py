@@ -80,19 +80,26 @@ blockchain = Blockchain()
 '''
 @app.route('/mine_block', methods = ['GET'])
 def mine_block():
-    # 이전 블럭이 있어야 작업 증명을 위한 연산이 가능
-    previous_block = blockchain.get_previous_block()
+  # 이전 블럭이 있어야 작업 증명을 위한 연산이 가능
+  previous_block = blockchain.get_previous_block()
 
-    # 이전 블럭의 작업 증명
-    previous_proof = previous_block['proof']
+  # 이전 블럭의 작업 증명
+  previous_proof = previous_block['proof']
 
-    # 작업 증명 획득하기
-    proof = blockchain.proof_of_work(previous_proof)
-    previous_hash = blockchain.hash(previous_block)
-    block = blockchain.create_block(proof, previous_hash)
-    response = { 'message': 'Congratulation, you just mined a block!',
-                 'index': block['index'],
-                 'timestamp': block['timestamp'],
-                 'proof': block['proof'],
-                 'previous_hash': block['previous_hash'] }
-    return jsonify(response), 200
+  # 작업 증명 획득하기
+  proof = blockchain.proof_of_work(previous_proof)
+  previous_hash = blockchain.hash(previous_block)
+  block = blockchain.create_block(proof, previous_hash)
+  response = { 'message': 'Congratulation, you just mined a block!',
+                'index': block['index'],
+                'timestamp': block['timestamp'],
+                'proof': block['proof'],
+                'previous_hash': block['previous_hash'] }
+  return jsonify(response), 200
+
+# Getting the full Blockchain
+@app.route('/get_chain', methods = ['GET'])
+def get_chain():
+  response = { 'chain': blockchain.chain,
+               'length': len(blockchain.chain) }
+  return jsonify(response), 200
