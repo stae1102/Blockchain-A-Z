@@ -42,7 +42,7 @@ class Blockchain:
 
   def hash(self, block):
     # hashlib 라이브러리의 sha256 메서드가 암호화할 수 있도록 문자열로 변환
-    encoded_block = json.dumps(block, sort_keys = True).encode
+    encoded_block = json.dumps(block, sort_keys = True).encode()
     return hashlib.sha256(encoded_block).hexdigest()
   
   def is_chain_valid(self, chain):
