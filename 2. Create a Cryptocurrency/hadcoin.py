@@ -58,7 +58,7 @@ class Blockchain:
     block_index = 1
     while block_index < len(chain):
       block = chain[block_index]
-      if previous_block['previous_hash'] != self.hash(block):
+      if block['previous_hash'] != self.hash(previous_block):
         return False
       previous_proof = previous_block['proof']
       proof = block['proof']
@@ -180,7 +180,7 @@ def connect_node():
   for node in nodes:
     blockchain.add_node(node)
   response = { 'message': 'All the nodes are connected. The Hadcoin Blockchain now contains the following nodes:',
-               'total_nodes': blockchain.nodes }
+               'total_nodes': list(blockchain.nodes) }
   return jsonify(response), 201
 
 # Replacing the chain by the longest chain if needed
