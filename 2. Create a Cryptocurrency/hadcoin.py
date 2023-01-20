@@ -105,6 +105,9 @@ class Blockchain:
 
 app = Flask(__name__)
 
+# Creating an address for the node on Port 5000
+node_address = str(uuid4()).replace('-', '')
+
 # Creating a Blockchain
 blockchain = Blockchain()
 
@@ -127,12 +130,14 @@ def mine_block():
   # 작업 증명 획득하기
   proof = blockchain.proof_of_work(previous_proof)
   previous_hash = blockchain.hash(previous_block)
+  blockchain.add_transaction(sender = node_address, receiver = 'Hadelin', amount = 1)
   block = blockchain.create_block(proof, previous_hash)
   response = { 'message': 'Congratulation, you just mined a block!',
                 'index': block['index'],
                 'timestamp': block['timestamp'],
                 'proof': block['proof'],
-                'previous_hash': block['previous_hash'] }
+                'previous_hash': block['previous_hash'],
+                'transaction': block['transactions'] }
   return jsonify(response), 200
 
 # Getting the full Blockchain
