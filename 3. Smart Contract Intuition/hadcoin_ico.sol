@@ -20,4 +20,10 @@ contract Hadcoin_ico {
   mapping(address => uint) equity_hadcoins;
   mapping(address => uint) equity_usd;
 
+  // Checking if an investor can buy Hadcoins
+  modifier can_buy_hadcoins(uint usd_invested) {
+    require (usd_invested * usd_to_hadcoins + total_hadcoins_bought <= max_hadcoins);
+    _;
+  }
+
 }
